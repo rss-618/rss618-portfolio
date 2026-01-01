@@ -4,13 +4,19 @@
 	import ThemeToggle from '$lib/components/shared/ThemeToggle.svelte';
 	import IconHamburger from '$lib/assets/icons/IconHamburger.svelte';
 	import IconClose from '$lib/assets/icons/IconClose.svelte';
+	import { auth } from '$lib/stores/auth.store';
+	import { Routes } from '$lib/constants';
 
-	const navLinks = [
-		{ href: '/', label: 'Home' },
-		{ href: '/projects', label: 'Projects' },
-		{ href: '/blog', label: 'Blog' },
-		{ href: '/more', label: 'More' }
+	const baseNavLinks = [
+		{ href: Routes.HOME, label: 'Home' },
+		{ href: Routes.PROJECTS, label: 'Projects' },
+		{ href: Routes.BLOG, label: 'Blog' },
+		{ href: Routes.MORE, label: 'More' }
 	];
+
+	let navLinks = $derived(
+		$auth.user ? [...baseNavLinks, { href: Routes.MANAGE, label: 'Manage' }] : baseNavLinks
+	);
 
 	let navRef: HTMLElement;
 	let underlineStyle = $state({ left: 0, width: 0 });
@@ -20,7 +26,7 @@
 	let previousPathname: string | null = null;
 
 	function isActive(href: string): boolean {
-		if (href === '/') return page.url.pathname === '/';
+		if (href === Routes.HOME) return page.url.pathname === Routes.HOME;
 		return page.url.pathname.startsWith(href);
 	}
 
@@ -89,10 +95,19 @@
 		updateUnderline();
 		closeMenu();
 	});
+
+	// Update underline when auth state changes (navLinks changes)
+	$effect(() => {
+		// Subscribe to navLinks changes
+		navLinks;
+		if (visible) {
+			updateUnderline();
+		}
+	});
 </script>
 
 <header>
-	<a href="/" class="logo" aria-label="Go to home">
+	<a href={Routes.HOME} class="logo" aria-label="Go to home">
 		<span class="logo-rss">RSS</span><span class="logo-num">618</span>
 	</a>
 

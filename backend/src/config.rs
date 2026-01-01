@@ -7,6 +7,8 @@ pub struct Config {
     pub host: IpAddr,
     pub port: u16,
     pub cors_origin: String,
+    pub database_path: String,
+    pub firebase_project_id: String,
 }
 
 impl Config {
@@ -17,6 +19,9 @@ impl Config {
             host: env_parse("HOST", "0.0.0.0"),
             port: env_parse("PORT", "3000"),
             cors_origin: env_var("CORS_ORIGIN", "http://localhost:5173"),
+            database_path: "sqlite:data/portfolio.db".to_string(),
+            firebase_project_id: env::var("FIREBASE_PROJECT_ID")
+                .expect("FIREBASE_PROJECT_ID must be set"),
         }
     }
 

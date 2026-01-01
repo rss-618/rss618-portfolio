@@ -1,15 +1,12 @@
 <script lang="ts">
 	import '$lib/styles/global.css';
-	import favicon from '$lib/assets/favicon.svg';
+	import '$lib/services/firebase';
 	import NavBar from '$lib/components/shared/NavBar.svelte';
 	import Footer from '$lib/components/shared/Footer.svelte';
+	import AuthProvider from '$lib/components/auth/AuthProvider.svelte';
 
 	let { children } = $props();
 </script>
-
-<svelte:head>
-	<link rel="icon" href={favicon} />
-</svelte:head>
 
 <div class="app">
 	<NavBar />
@@ -20,6 +17,8 @@
 
 	<Footer />
 </div>
+
+<AuthProvider />
 
 <style>
 	.app {
