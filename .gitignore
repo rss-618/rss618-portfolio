@@ -1,24 +1,34 @@
+# Dependencies
 node_modules
 
-# Output
+# Frontend build output
+frontend/.svelte-kit
+frontend/build
+
+# Backend build output
+backend/target
+
+# Platform deploy folders
 .output
 .vercel
 .netlify
 .wrangler
-/.svelte-kit
-/build
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Env
+# Environment
 .env
 .env.*
 !.env.example
-!.env.test
 
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# IDE
+.idea
+*.swp
+*.swo
 *.md
