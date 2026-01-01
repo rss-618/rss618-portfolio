@@ -308,26 +308,26 @@
 	}
 
 	.sidebar-link {
+		position: relative;
 		display: block;
 		padding: var(--space-md);
 		color: var(--color-text-muted);
 		text-decoration: none;
 		font-weight: 500;
 		font-size: 1.125rem;
-		border-radius: var(--radius-md);
+		border-left: 2px solid transparent;
 		transition:
 			color var(--transition-fast),
-			background-color var(--transition-fast);
+			border-color var(--transition-fast);
 	}
 
 	.sidebar-link:hover {
 		color: var(--color-text);
-		background-color: var(--color-surface);
 	}
 
 	.sidebar-link.active {
 		color: var(--color-accent);
-		background-color: var(--color-surface);
+		border-left-color: var(--color-accent);
 	}
 
 	/* Mobile breakpoint */
