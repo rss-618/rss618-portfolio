@@ -14,4 +14,4 @@ export type JwtClaims = {
 		};
 		sign_in_provider: string;
 	};
-}
+};

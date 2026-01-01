@@ -26,7 +26,13 @@
 <dialog bind:this={dialogRef} class="success-dialog" onclick={handleBackdropClick}>
 	<div class="dialog-content">
 		<div class="icon-container">
-			<svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+			<svg
+				class="check-icon"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2"
+			>
 				<path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round" />
 			</svg>
 		</div>

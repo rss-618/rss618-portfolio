@@ -7,8 +7,8 @@
 		{
 			href: 'https://www.linkedin.com/in/ryan-schildknecht-242b0a1b3/',
 			label: 'LinkedIn',
-			icon: IconLinkedIn
-		}
+			icon: IconLinkedIn,
+		},
 	];
 
 	const currentYear = new Date().getFullYear();

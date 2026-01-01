@@ -7,4 +7,4 @@ export type JwtToken = {
 	header: string;
 	claims: JwtClaims;
 	signature: string;
-}
+};

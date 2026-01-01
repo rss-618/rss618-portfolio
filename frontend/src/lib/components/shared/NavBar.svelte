@@ -10,7 +10,7 @@
 		{ href: Routes.HOME, label: 'Home' },
 		{ href: Routes.PROJECTS, label: 'Projects' },
 		{ href: Routes.BLOG, label: 'Blog' },
-		{ href: Routes.MORE, label: 'More' }
+		{ href: Routes.MORE, label: 'More' },
 	];
 
 	let navLinks = $derived(
@@ -36,7 +36,7 @@
 		if (activeLink) {
 			underlineStyle = {
 				left: activeLink.offsetLeft,
-				width: activeLink.offsetWidth
+				width: activeLink.offsetWidth,
 			};
 		}
 	}

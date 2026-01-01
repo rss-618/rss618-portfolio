@@ -15,7 +15,8 @@
 			development. Currently serving as iOS Tech Lead at O'Reilly Auto Parts.
 		</p>
 		<p>
-			Beyond my professional work, I enjoy building tools that solve problems I find interesting or has a direct impact on myself or those around me.
+			Beyond my professional work, I enjoy building tools that solve problems I find interesting or
+			has a direct impact on myself or those around me.
 		</p>
 		<p>
 			This site serves as a showcase for my personal projects, offering detailed breakdowns, source

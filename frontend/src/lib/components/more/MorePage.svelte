@@ -6,9 +6,7 @@
 
 <h1>More</h1>
 
-<p class="prose intro">
-	Feel free to connect with me on social media or reach out via email.
-</p>
+<p class="prose intro">Feel free to connect with me on social media or reach out via email.</p>
 
 <section>
 	<h2>Connect</h2>
