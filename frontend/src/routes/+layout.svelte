@@ -1,7 +1,8 @@
 <script lang="ts">
 	import '$lib/styles/global.css';
 	import favicon from '$lib/assets/favicon.svg';
-	import ThemeToggle from '$lib/components/shared/ThemeToggle.svelte';
+	import NavBar from '$lib/components/shared/NavBar.svelte';
+	import Footer from '$lib/components/shared/Footer.svelte';
 
 	let { children } = $props();
 </script>
@@ -10,22 +11,31 @@
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
-<header>
-	<ThemeToggle />
-</header>
+<div class="app">
+	<NavBar />
 
-<main>
-	{@render children()}
-</main>
+	<main>
+		{@render children()}
+	</main>
+
+	<Footer />
+</div>
 
 <style>
-	header {
+	.app {
 		display: flex;
-		justify-content: flex-end;
-		padding: var(--space-md);
+		flex-direction: column;
+		min-height: 100vh;
 	}
 
 	main {
-		padding: var(--space-md);
+		flex: 1;
+		padding: var(--space-xl);
+	}
+
+	@media (max-width: 768px) {
+		main {
+			padding: var(--space-md);
+		}
 	}
 </style>

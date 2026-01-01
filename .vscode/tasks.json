@@ -2,33 +2,83 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
+			"label": "Frontend: Dev",
 			"type": "npm",
 			"script": "dev",
+			"path": "frontend",
 			"problemMatcher": [],
-			"label": "npm: dev",
-			"detail": "vite dev",
-			"isBackground": true
+			"isBackground": true,
+			"detail": "vite dev"
 		},
 		{
+			"label": "Frontend: Build",
 			"type": "npm",
 			"script": "build",
+			"path": "frontend",
 			"problemMatcher": [],
-			"label": "npm: build",
 			"detail": "vite build"
 		},
 		{
+			"label": "Frontend: Check",
 			"type": "npm",
 			"script": "check",
+			"path": "frontend",
 			"problemMatcher": ["$tsc"],
-			"label": "npm: check",
 			"detail": "svelte-kit sync && svelte-check"
 		},
 		{
+			"label": "Frontend: Lint",
 			"type": "npm",
 			"script": "lint",
+			"path": "frontend",
 			"problemMatcher": ["$eslint-stylish"],
-			"label": "npm: lint",
 			"detail": "eslint ."
+		},
+		{
+			"label": "Backend: Run",
+			"type": "shell",
+			"command": "cargo run",
+			"options": {
+				"cwd": "${workspaceFolder}/backend",
+				"env": {
+					"RUST_LOG": "backend=debug,tower_http=debug"
+				}
+			},
+			"problemMatcher": ["$rustc"],
+			"isBackground": true,
+			"detail": "cargo run"
+		},
+		{
+			"label": "Backend: Build",
+			"type": "shell",
+			"command": "cargo build",
+			"options": {
+				"cwd": "${workspaceFolder}/backend"
+			},
+			"problemMatcher": ["$rustc"],
+			"group": "build",
+			"detail": "cargo build"
+		},
+		{
+			"label": "Backend: Check",
+			"type": "shell",
+			"command": "cargo check",
+			"options": {
+				"cwd": "${workspaceFolder}/backend"
+			},
+			"problemMatcher": ["$rustc"],
+			"detail": "cargo check"
+		},
+		{
+			"label": "Backend: Test",
+			"type": "shell",
+			"command": "cargo test",
+			"options": {
+				"cwd": "${workspaceFolder}/backend"
+			},
+			"problemMatcher": ["$rustc"],
+			"group": "test",
+			"detail": "cargo test"
 		}
 	]
 }

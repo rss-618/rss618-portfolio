@@ -2,12 +2,12 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Dev Server",
+			"name": "Frontend: Dev Server",
 			"type": "node",
 			"request": "launch",
 			"runtimeExecutable": "npm",
 			"runtimeArgs": ["run", "dev"],
-			"cwd": "${workspaceFolder}",
+			"cwd": "${workspaceFolder}/frontend",
 			"console": "integratedTerminal",
 			"serverReadyAction": {
 				"pattern": "Local:\\s+(https?://\\S+)",
@@ -16,21 +16,54 @@
 			}
 		},
 		{
-			"name": "Debug in Chrome",
+			"name": "Frontend: Debug in Chrome",
 			"type": "chrome",
 			"request": "launch",
 			"url": "http://localhost:5173",
-			"webRoot": "${workspaceFolder}/src"
+			"webRoot": "${workspaceFolder}/frontend/src"
 		},
 		{
-			"name": "Preview Build",
+			"name": "Frontend: Preview Build",
 			"type": "node",
 			"request": "launch",
 			"runtimeExecutable": "npm",
 			"runtimeArgs": ["run", "preview"],
-			"cwd": "${workspaceFolder}",
+			"cwd": "${workspaceFolder}/frontend",
 			"console": "integratedTerminal",
-			"preLaunchTask": "npm: build"
+			"preLaunchTask": "Frontend: Build"
+		},
+		{
+			"name": "Backend: Run Server",
+			"type": "node",
+			"request": "launch",
+			"runtimeExecutable": "cargo",
+			"runtimeArgs": ["run"],
+			"cwd": "${workspaceFolder}/backend",
+			"console": "integratedTerminal",
+			"env": {
+				"RUST_LOG": "backend=debug,tower_http=debug"
+			}
+		},
+		{
+			"name": "Full Stack: Dev",
+			"type": "node",
+			"request": "launch",
+			"runtimeExecutable": "npm",
+			"runtimeArgs": ["run", "dev"],
+			"cwd": "${workspaceFolder}/frontend",
+			"console": "integratedTerminal",
+			"preLaunchTask": "Backend: Run",
+			"serverReadyAction": {
+				"pattern": "Local:\\s+(https?://\\S+)",
+				"uriFormat": "%s",
+				"action": "debugWithChrome"
+			}
+		}
+	],
+	"compounds": [
+		{
+			"name": "Full Stack (Parallel)",
+			"configurations": ["Frontend: Dev Server", "Backend: Run Server"]
 		}
 	]
 }

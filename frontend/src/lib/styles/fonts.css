@@ -1,11 +1,21 @@
 /*
  * Self-hosted fonts
+ * Using font-display: block to prevent FOUT (flash of unstyled text)
+ * Block period is short (3s max), fonts are small and preloaded
  */
 
 @font-face {
 	font-family: 'Outfit';
-	src: url('../assets/fonts/outfit/Outfit-Variable.woff2') format('woff2');
+	src: url('/fonts/Outfit-Variable.woff2') format('woff2');
 	font-weight: 100 900;
 	font-style: normal;
-	font-display: swap;
+	font-display: block;
+}
+
+@font-face {
+	font-family: 'Silkscreen';
+	src: url('/fonts/Silkscreen-Regular.woff2') format('woff2');
+	font-weight: 400;
+	font-style: normal;
+	font-display: block;
 }
