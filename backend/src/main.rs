@@ -6,14 +6,11 @@ mod middleware;
 mod repositories;
 mod services;
 mod state;
+mod utils;
 
-use std::sync::Arc;
-
-use tower_http::cors::{Any, CorsLayer};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 use crate::config::Config;
-use crate::services::FirebaseAuth;
 use crate::state::AppState;
 
 #[tokio::main]
@@ -26,19 +23,9 @@ async fn main() {
     let config = Config::from_env();
     let addr = config.socket_addr();
 
-    let pool = db::connect(&config.database_path).await;
-    db::run_migrations(&pool).await;
-
-    let firebase_auth = Arc::new(FirebaseAuth::new(config.firebase_project_id.clone()));
-
-    let cors = CorsLayer::new()
-        .allow_origin(config.cors_origin.parse::<http::HeaderValue>().unwrap())
-        .allow_methods(Any)
-        .allow_headers(Any);
-
-    let state = AppState::new(config, pool, firebase_auth);
-
-    let app = api::router().layer(cors).with_state(state);
+    let pool = db::init(&config.database_path).await;
+    let state = AppState::new(config, pool);
+    let app = api::router(state);
 
     tracing::info!("Listening on {}", addr);
 

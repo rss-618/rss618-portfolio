@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { auth } from '$lib/stores/auth.store';
+	import { invalidateAll } from '$app/navigation';
+	import { login } from '$lib/api/auth.api';
 
 	interface Props {
 		open: boolean;
@@ -43,16 +44,17 @@
 		isSubmitting = true;
 		errorMessage = '';
 
-		const result = await auth.login(email, password);
+		const result = await login(email, password);
 
 		isSubmitting = false;
 
 		if (result.success) {
 			email = '';
 			password = '';
+			await invalidateAll();
 			onSuccess();
 		} else {
-			errorMessage = result.error ?? 'Login failed';
+			errorMessage = result.error;
 		}
 	}
 </script>

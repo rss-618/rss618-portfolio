@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import { auth } from '$lib/stores/auth.store';
+	import { goto, invalidateAll } from '$app/navigation';
+	import { logout } from '$lib/api/auth.api';
 	import { Routes } from '$lib/constants';
 
 	async function handleLogout() {
-		await auth.logout();
+		await logout();
+		await invalidateAll();
 		goto(Routes.HOME);
 	}
 </script>

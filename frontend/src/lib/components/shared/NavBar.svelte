@@ -4,7 +4,6 @@
 	import ThemeToggle from '$lib/components/shared/ThemeToggle.svelte';
 	import IconHamburger from '$lib/assets/icons/IconHamburger.svelte';
 	import IconClose from '$lib/assets/icons/IconClose.svelte';
-	import { auth } from '$lib/stores/auth.store';
 	import { Routes } from '$lib/constants';
 
 	const baseNavLinks = [
@@ -15,7 +14,7 @@
 	];
 
 	let navLinks = $derived(
-		$auth.user ? [...baseNavLinks, { href: Routes.MANAGE, label: 'Manage' }] : baseNavLinks
+		page.data.user ? [...baseNavLinks, { href: Routes.MANAGE, label: 'Manage' }] : baseNavLinks
 	);
 
 	let navRef: HTMLElement;
@@ -96,7 +95,7 @@
 		closeMenu();
 	});
 
-	// Update underline when auth state changes (navLinks changes)
+	// Update underline when user state changes (navLinks changes)
 	$effect(() => {
 		// Subscribe to navLinks changes
 		navLinks;

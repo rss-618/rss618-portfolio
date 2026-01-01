@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
-	import '$lib/stores/auth.store';
 	import LoginDialog from './LoginDialog.svelte';
 	import SuccessDialog from './SuccessDialog.svelte';
 

@@ -9,6 +9,7 @@ pub struct Config {
     pub cors_origin: String,
     pub database_path: String,
     pub firebase_project_id: String,
+    pub firebase_api_key: String,
 }
 
 impl Config {
@@ -22,6 +23,8 @@ impl Config {
             database_path: "sqlite:data/portfolio.db".to_string(),
             firebase_project_id: env::var("FIREBASE_PROJECT_ID")
                 .expect("FIREBASE_PROJECT_ID must be set"),
+            firebase_api_key: env::var("FIREBASE_API_KEY")
+                .expect("FIREBASE_API_KEY must be set"),
         }
     }
 

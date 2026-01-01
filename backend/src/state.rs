@@ -12,7 +12,12 @@ pub struct AppState {
 }
 
 impl AppState {
-    pub fn new(config: Config, pool: DbPool, firebase_auth: Arc<FirebaseAuth>) -> Self {
+    pub fn new(config: Config, pool: DbPool) -> Self {
+        let firebase_auth = Arc::new(FirebaseAuth::new(
+            config.firebase_project_id.clone(),
+            config.firebase_api_key.clone(),
+        ));
+
         Self {
             config,
             pool,

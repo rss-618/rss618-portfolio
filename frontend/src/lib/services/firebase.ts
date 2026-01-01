@@ -1,5 +1,4 @@
 import { initializeApp, type FirebaseApp } from 'firebase/app';
-import { getAuth, type Auth } from 'firebase/auth';
 import { getAnalytics, type Analytics } from 'firebase/analytics';
 import { getPerformance, type FirebasePerformance } from 'firebase/performance';
 import { browser } from '$app/environment';
@@ -24,7 +23,6 @@ const firebaseConfig = {
 };
 
 let app: FirebaseApp | null = null;
-let auth: Auth | null = null;
 let analytics: Analytics | null = null;
 let performance: FirebasePerformance | null = null;
 
@@ -33,16 +31,6 @@ function getApp(): FirebaseApp {
 		app = initializeApp(firebaseConfig);
 	}
 	return app;
-}
-
-export function getFirebaseAuth(): Auth {
-	if (!browser) {
-		throw new Error('Firebase Auth can only be used in the browser');
-	}
-	if (!auth) {
-		auth = getAuth(getApp());
-	}
-	return auth;
 }
 
 export function getFirebaseAnalytics(): Analytics {
@@ -65,7 +53,6 @@ export function getFirebasePerformance(): FirebasePerformance {
 	return performance;
 }
 
-// Auto-initialize analytics and performance in browser
 if (browser) {
 	getFirebaseAnalytics();
 	getFirebasePerformance();

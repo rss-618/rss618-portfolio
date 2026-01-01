@@ -8,6 +8,10 @@ frontend/build
 # Backend build output
 backend/target
 
+# Database
+backend/data/*.db
+backend/data/*.db-*
+
 # Platform deploy folders
 .output
 .vercel
