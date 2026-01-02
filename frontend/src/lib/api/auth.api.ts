@@ -1,10 +1,9 @@
+import { PUBLIC_API_URL } from '$env/static/public';
 import { ok, err, type Result } from '$lib/utils';
-
-const API_BASE = 'http://localhost:3000';
 
 export async function login(email: string, password: string): Promise<Result> {
 	try {
-		const response = await fetch(`${API_BASE}/auth/login`, {
+		const response = await fetch(`${PUBLIC_API_URL}/auth/login`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			credentials: 'include',
@@ -23,7 +22,7 @@ export async function login(email: string, password: string): Promise<Result> {
 
 export async function logout(): Promise<void> {
 	try {
-		await fetch(`${API_BASE}/auth/logout`, {
+		await fetch(`${PUBLIC_API_URL}/auth/logout`, {
 			method: 'POST',
 			credentials: 'include',
 		});
