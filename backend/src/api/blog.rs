@@ -5,9 +5,9 @@ use axum::{
     Json, Router,
 };
 use proto::blog::{
-    CreateBlogPostRequest, CreateBlogPostResponse, DeleteBlogPostResponse, GetBlogPostResponse,
-    GetBlogPostsRequest, GetBlogPostsResponse, RestoreBlogPostResponse, UpdateBlogPostRequest,
-    UpdateBlogPostResponse,
+    BlogPost, BlogPostSummary, CreateBlogPostRequest, CreateBlogPostResponse,
+    DeleteBlogPostResponse, GetBlogPostResponse, GetBlogPostsRequest, GetBlogPostsResponse,
+    RestoreBlogPostResponse, UpdateBlogPostRequest, UpdateBlogPostResponse,
 };
 
 use crate::state::AppState;
@@ -30,39 +30,59 @@ async fn list_posts(
     State(state): State<AppState>,
     Query(req): Query<GetBlogPostsRequest>,
 ) -> Result<Json<GetBlogPostsResponse>, StatusCode> {
-    let response = state
+    let (posts, total) = state
         .blog_service
-        .list(&req)
+        .list(req.query.as_deref(), req.limit, req.offset)
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
-    Ok(Json(response))
+    let posts = posts
+        .into_iter()
+        .map(|p| BlogPostSummary {
+            id: p.id,
+            title: p.title,
+            description: p.description,
+            created_at: p.created_at,
+            updated_at: p.updated_at,
+        })
+        .collect();
+
+    Ok(Json(GetBlogPostsResponse { posts, total }))
 }
 
 async fn get_post(
     State(state): State<AppState>,
     Path(id): Path<i64>,
 ) -> Result<Json<GetBlogPostResponse>, StatusCode> {
-    let response = state
+    let post = state
         .blog_service
         .get(id)
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
-    Ok(Json(response))
+    let post = post.map(|p| BlogPost {
+        id: p.id,
+        title: p.title,
+        description: p.description,
+        body: p.body,
+        created_at: p.created_at,
+        updated_at: p.updated_at,
+    });
+
+    Ok(Json(GetBlogPostResponse { post }))
 }
 
 async fn create_post(
     State(state): State<AppState>,
     Json(req): Json<CreateBlogPostRequest>,
 ) -> Result<Json<CreateBlogPostResponse>, StatusCode> {
-    let response = state
+    let id = state
         .blog_service
-        .create(&req)
+        .create(&req.title, &req.description, &req.body)
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
-    Ok(Json(response))
+    Ok(Json(CreateBlogPostResponse { id }))
 }
 
 async fn update_post(
@@ -70,15 +90,21 @@ async fn update_post(
     Path(id): Path<i64>,
     Json(req): Json<UpdateBlogPostRequest>,
 ) -> Result<Json<UpdateBlogPostResponse>, StatusCode> {
-    let response = state
+    let updated = state
         .blog_service
-        .update(id, &req)
+        .update(
+            id,
+            req.title.as_deref(),
+            req.description.as_deref(),
+            req.body.as_deref(),
+        )
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
-    match response {
-        Some(r) => Ok(Json(r)),
-        None => Err(StatusCode::NOT_FOUND),
+    if updated {
+        Ok(Json(UpdateBlogPostResponse {}))
+    } else {
+        Err(StatusCode::NOT_FOUND)
     }
 }
 
@@ -86,15 +112,16 @@ async fn delete_post(
     State(state): State<AppState>,
     Path(id): Path<i64>,
 ) -> Result<Json<DeleteBlogPostResponse>, StatusCode> {
-    let response = state
+    let deleted = state
         .blog_service
         .delete(id)
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
-    match response {
-        Some(r) => Ok(Json(r)),
-        None => Err(StatusCode::NOT_FOUND),
+    if deleted {
+        Ok(Json(DeleteBlogPostResponse {}))
+    } else {
+        Err(StatusCode::NOT_FOUND)
     }
 }
 
@@ -102,14 +129,15 @@ async fn restore_post(
     State(state): State<AppState>,
     Path(id): Path<i64>,
 ) -> Result<Json<RestoreBlogPostResponse>, StatusCode> {
-    let response = state
+    let restored = state
         .blog_service
         .restore(id)
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
-    match response {
-        Some(r) => Ok(Json(r)),
-        None => Err(StatusCode::NOT_FOUND),
+    if restored {
+        Ok(Json(RestoreBlogPostResponse {}))
+    } else {
+        Err(StatusCode::NOT_FOUND)
     }
 }
