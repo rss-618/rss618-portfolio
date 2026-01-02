@@ -2,13 +2,14 @@ use std::sync::Arc;
 
 use crate::config::Config;
 use crate::db::DbPool;
-use crate::services::FirebaseAuth;
+use crate::repositories::BlogRepository;
+use crate::services::{BlogService, FirebaseAuth};
 
 #[derive(Clone)]
 pub struct AppState {
     pub config: Config,
-    pub pool: DbPool,
     pub firebase_auth: Arc<FirebaseAuth>,
+    pub blog_service: Arc<BlogService>,
 }
 
 impl AppState {
@@ -18,10 +19,12 @@ impl AppState {
             config.firebase_api_key.clone(),
         ));
 
+        let blog_service = Arc::new(BlogService::new(BlogRepository::new(pool)));
+
         Self {
             config,
-            pool,
             firebase_auth,
+            blog_service,
         }
     }
 }

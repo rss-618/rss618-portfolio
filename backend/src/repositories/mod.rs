@@ -1,1 +1,3 @@
-// Repositories will be added as needed (e.g., projects, blog posts)
+pub mod blog;
+
+pub use blog::BlogRepository;

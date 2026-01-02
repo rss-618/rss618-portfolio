@@ -20,4 +20,4 @@ services:
       - HOST=0.0.0.0
       - PORT=3000
       - CORS_ORIGIN=http://localhost:5173
-      - RUST_LOG=backend=debug,tower_http=debug
+      - RUST_LOG=info,tower_http=info

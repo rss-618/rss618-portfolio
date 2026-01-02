@@ -4,14 +4,15 @@ RUN apk add --no-cache musl-dev
 
 WORKDIR /app
 
-COPY backend/Cargo.toml backend/Cargo.lock* ./
-RUN mkdir src && echo "fn main() {}" > src/main.rs
-RUN cargo build --release
-RUN rm -rf src
+COPY proto/gen/rust ./proto/gen/rust
+COPY backend/Cargo.toml backend/Cargo.lock* ./backend/
+RUN mkdir backend/src && echo "fn main() {}" > backend/src/main.rs
+RUN cd backend && cargo build --release
+RUN rm -rf backend/src
 
-COPY backend/src ./src
-RUN touch src/main.rs
-RUN cargo build --release
+COPY backend/src ./backend/src
+RUN touch backend/src/main.rs
+RUN cd backend && cargo build --release
 
 FROM alpine:3.21 AS runner
 
@@ -19,7 +20,7 @@ RUN apk add --no-cache ca-certificates
 
 WORKDIR /app
 
-COPY --from=builder /app/target/release/backend ./backend
+COPY --from=builder /app/backend/target/release/backend ./backend
 
 ENV HOST=0.0.0.0
 ENV PORT=3000

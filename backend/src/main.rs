@@ -1,5 +1,6 @@
 mod api;
 mod config;
+mod dao;
 mod db;
 mod dto;
 mod middleware;
@@ -8,7 +9,7 @@ mod services;
 mod state;
 mod utils;
 
-use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 
 use crate::config::Config;
 use crate::state::AppState;
@@ -17,7 +18,10 @@ use crate::state::AppState;
 async fn main() {
     tracing_subscriber::registry()
         .with(tracing_subscriber::fmt::layer())
-        .with(tracing_subscriber::EnvFilter::from_default_env())
+        .with(
+            EnvFilter::try_from_default_env()
+                .unwrap_or_else(|_| EnvFilter::new("backend=info,tower_http=info")),
+        )
         .init();
 
     let config = Config::from_env();
