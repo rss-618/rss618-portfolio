@@ -14,7 +14,7 @@ use crate::state::AppState;
 
 pub fn public_router() -> Router<AppState> {
     Router::new()
-        .route("/blog", get(list_posts))
+        .route("/blog", post(list_posts))
         .route("/blog/{id}", get(get_post))
 }
 
@@ -28,7 +28,7 @@ pub fn protected_router() -> Router<AppState> {
 
 async fn list_posts(
     State(state): State<AppState>,
-    Query(req): Query<GetBlogPostsRequest>,
+    Json(req): Json<GetBlogPostsRequest>,
 ) -> Result<Json<GetBlogPostsResponse>, StatusCode> {
     let (posts, total) = state
         .blog_service

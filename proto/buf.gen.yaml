@@ -1,11 +1,18 @@
 version: v2
 plugins:
+  # Rust: message types
   - remote: buf.build/community/neoeinstein-prost
     out: gen/rust
     opt:
       - bytes=.
       - file_descriptor_set
-  - remote: buf.build/community/neoeinstein-prost-serde
+  # Rust: gRPC server stubs
+  - remote: buf.build/community/neoeinstein-tonic
     out: gen/rust
-  - remote: buf.build/community/timostamm-protobuf-ts
+    opt:
+      - no_client
+  # TypeScript: messages + service descriptors (Connect-ES v2)
+  - remote: buf.build/bufbuild/es
     out: gen/ts
+    opt:
+      - target=ts

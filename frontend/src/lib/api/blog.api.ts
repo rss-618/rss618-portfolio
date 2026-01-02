@@ -1,34 +1,21 @@
-import { PUBLIC_API_URL } from '$env/static/public';
+import { createClient } from '@connectrpc/connect';
+import { BlogService, GetBlogPostsRequest_Sort } from '$proto/blog_pb';
+import type { GetBlogPostsResponse } from '$proto/blog_pb';
 import { ok, err, type Result } from '$lib/utils';
-import type { GetBlogPostsResponse } from '$proto/blog';
-import { GetBlogPostsRequest_Sort } from '$proto/blog';
+import { transport } from './transport';
 
-export { GetBlogPostsRequest_Sort as BlogPostSort };
+const client = createClient(BlogService, transport);
 
 export async function getBlogPosts(
 	query: string | undefined,
 	limit: number,
 	offset: number,
-	sort: GetBlogPostsRequest_Sort,
+	sort: GetBlogPostsRequest_Sort
 ): Promise<Result<GetBlogPostsResponse>> {
 	try {
-		const params = new URLSearchParams();
-		if (query) params.set('query', query);
-		params.set('limit', String(limit));
-		params.set('offset', String(offset));
-		params.set('sort', String(sort));
-
-		const response = await fetch(`${PUBLIC_API_URL}/blog?${params}`, {
-			credentials: 'include',
-		});
-
-		if (!response.ok) {
-			return err('Failed to fetch blog posts');
-		}
-
-		const data: GetBlogPostsResponse = await response.json();
-		return ok(data);
-	} catch {
-		return err('Network error');
+		const response = await client.getBlogPosts({ query, limit, offset, sort });
+		return ok(response);
+	} catch (e) {
+		return err(e instanceof Error ? e.message : 'Network error');
 	}
 }

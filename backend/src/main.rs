@@ -1,17 +1,24 @@
-mod api;
 mod config;
 mod dao;
 mod db;
-mod dto;
-mod middleware;
+mod grpc;
 mod repositories;
 mod services;
 mod state;
-mod utils;
 
+// TODO: Migrate these to gRPC (currently broken - proto types don't have serde)
+// mod api;
+// mod dto;
+// mod middleware;
+// mod utils;
+
+use proto::blog::blog_service_server::BlogServiceServer;
+use tonic::transport::Server;
+use tonic_web::GrpcWebLayer;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 
 use crate::config::Config;
+use crate::grpc::BlogController;
 use crate::state::AppState;
 
 #[tokio::main]
@@ -29,10 +36,15 @@ async fn main() {
 
     let pool = db::init(&config.database_path).await;
     let state = AppState::new(config, pool);
-    let app = api::router(state);
 
-    tracing::info!("Listening on {}", addr);
+    // TODO: Migrate auth and other REST endpoints to gRPC
+    tracing::info!("gRPC server listening on {}", addr);
 
-    let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
-    axum::serve(listener, app).await.unwrap();
+    Server::builder()
+        .accept_http1(true)
+        .layer(GrpcWebLayer::new())
+        .add_service(BlogServiceServer::new(BlogController::new(state.clone())))
+        .serve(addr)
+        .await
+        .unwrap();
 }
