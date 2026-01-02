@@ -1,6 +1,6 @@
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use crate::dao::blog::{BlogPost, BlogPostSummary};
+use crate::dao::blog::{BlogPost, BlogPostSort, BlogPostSummary};
 use crate::db::DbPool;
 
 pub struct BlogRepository {
@@ -17,26 +17,37 @@ impl BlogRepository {
         query: Option<&str>,
         limit: i32,
         offset: i32,
+        sort: BlogPostSort,
     ) -> Result<(Vec<BlogPostSummary>, i32), sqlx::Error> {
         let limit = if limit <= 0 { 10 } else { limit };
 
         let (posts, total) = if let Some(q) = query.filter(|s| !s.is_empty()) {
-            let posts = sqlx::query_as::<_, BlogPostSummary>(
+            let order_by = match sort {
+                BlogPostSort::Relevance => "rank",
+                BlogPostSort::CreatedAsc => "bp.created_at ASC",
+                BlogPostSort::CreatedDesc => "bp.created_at DESC",
+                BlogPostSort::UpdatedAsc => "bp.updated_at ASC",
+                BlogPostSort::UpdatedDesc => "bp.updated_at DESC",
+            };
+
+            let sql = format!(
                 r#"
                 SELECT bp.id, bp.title, bp.description, bp.created_at, bp.updated_at
                 FROM blog_posts_fts fts
                 INNER JOIN blog_posts bp ON bp.id = fts.rowid
                 WHERE blog_posts_fts MATCH ?
                   AND bp.deleted_at IS NULL
-                ORDER BY rank
+                ORDER BY {order_by}
                 LIMIT ? OFFSET ?
-                "#,
-            )
-            .bind(q)
-            .bind(limit)
-            .bind(offset)
-            .fetch_all(&self.pool)
-            .await?;
+                "#
+            );
+
+            let posts = sqlx::query_as::<_, BlogPostSummary>(&sql)
+                .bind(q)
+                .bind(limit)
+                .bind(offset)
+                .fetch_all(&self.pool)
+                .await?;
 
             let total: i32 = sqlx::query_scalar(
                 r#"
@@ -53,19 +64,29 @@ impl BlogRepository {
 
             (posts, total)
         } else {
-            let posts = sqlx::query_as::<_, BlogPostSummary>(
+            // Without a search query, relevance doesn't apply - default to created_at DESC
+            let order_by = match sort {
+                BlogPostSort::Relevance | BlogPostSort::CreatedDesc => "created_at DESC",
+                BlogPostSort::CreatedAsc => "created_at ASC",
+                BlogPostSort::UpdatedAsc => "updated_at ASC",
+                BlogPostSort::UpdatedDesc => "updated_at DESC",
+            };
+
+            let sql = format!(
                 r#"
                 SELECT id, title, description, created_at, updated_at
                 FROM blog_posts
                 WHERE deleted_at IS NULL
-                ORDER BY created_at DESC
+                ORDER BY {order_by}
                 LIMIT ? OFFSET ?
-                "#,
-            )
-            .bind(limit)
-            .bind(offset)
-            .fetch_all(&self.pool)
-            .await?;
+                "#
+            );
+
+            let posts = sqlx::query_as::<_, BlogPostSummary>(&sql)
+                .bind(limit)
+                .bind(offset)
+                .fetch_all(&self.pool)
+                .await?;
 
             let total: i32 =
                 sqlx::query_scalar("SELECT COUNT(*) FROM blog_posts WHERE deleted_at IS NULL")

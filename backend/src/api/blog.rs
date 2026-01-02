@@ -32,7 +32,7 @@ async fn list_posts(
 ) -> Result<Json<GetBlogPostsResponse>, StatusCode> {
     let (posts, total) = state
         .blog_service
-        .list(req.query.as_deref(), req.limit, req.offset)
+        .list(req.query.as_deref(), req.limit, req.offset, req.sort.into())
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 

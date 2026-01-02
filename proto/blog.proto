@@ -12,9 +12,18 @@ service BlogService {
 }
 
 message GetBlogPostsRequest {
+  enum Sort {
+    RELEVANCE = 0;
+    CREATED_ASC = 1;
+    CREATED_DESC = 2;
+    UPDATED_ASC = 3;
+    UPDATED_DESC = 4;
+  }
+
   optional string query = 1;
   int32 limit = 2;
   int32 offset = 3;
+  Sort sort = 4;
 }
 
 message GetBlogPostsResponse {

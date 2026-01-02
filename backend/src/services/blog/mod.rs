@@ -1,4 +1,4 @@
-use crate::dao::blog::{BlogPost, BlogPostSummary};
+use crate::dao::blog::{BlogPost, BlogPostSort, BlogPostSummary};
 use crate::repositories::BlogRepository;
 
 pub struct BlogService {
@@ -15,8 +15,9 @@ impl BlogService {
         query: Option<&str>,
         limit: i32,
         offset: i32,
+        sort: BlogPostSort,
     ) -> Result<(Vec<BlogPostSummary>, i32), sqlx::Error> {
-        self.repo.list(query, limit, offset).await
+        self.repo.list(query, limit, offset, sort).await
     }
 
     pub async fn get(&self, id: i64) -> Result<Option<BlogPost>, sqlx::Error> {

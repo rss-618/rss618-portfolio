@@ -951,6 +951,9 @@ impl serde::Serialize for GetBlogPostsRequest {
         if self.offset != 0 {
             len += 1;
         }
+        if self.sort != 0 {
+            len += 1;
+        }
         let mut struct_ser = serializer.serialize_struct("blog.GetBlogPostsRequest", len)?;
         if let Some(v) = self.query.as_ref() {
             struct_ser.serialize_field("query", v)?;
@@ -960,6 +963,11 @@ impl serde::Serialize for GetBlogPostsRequest {
         }
         if self.offset != 0 {
             struct_ser.serialize_field("offset", &self.offset)?;
+        }
+        if self.sort != 0 {
+            let v = get_blog_posts_request::Sort::try_from(self.sort)
+                .map_err(|_| serde::ser::Error::custom(format!("Invalid variant {}", self.sort)))?;
+            struct_ser.serialize_field("sort", &v)?;
         }
         struct_ser.end()
     }
@@ -974,6 +982,7 @@ impl<'de> serde::Deserialize<'de> for GetBlogPostsRequest {
             "query",
             "limit",
             "offset",
+            "sort",
         ];
 
         #[allow(clippy::enum_variant_names)]
@@ -981,6 +990,7 @@ impl<'de> serde::Deserialize<'de> for GetBlogPostsRequest {
             Query,
             Limit,
             Offset,
+            Sort,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
             fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
@@ -1005,6 +1015,7 @@ impl<'de> serde::Deserialize<'de> for GetBlogPostsRequest {
                             "query" => Ok(GeneratedField::Query),
                             "limit" => Ok(GeneratedField::Limit),
                             "offset" => Ok(GeneratedField::Offset),
+                            "sort" => Ok(GeneratedField::Sort),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
                     }
@@ -1027,6 +1038,7 @@ impl<'de> serde::Deserialize<'de> for GetBlogPostsRequest {
                 let mut query__ = None;
                 let mut limit__ = None;
                 let mut offset__ = None;
+                let mut sort__ = None;
                 while let Some(k) = map_.next_key()? {
                     match k {
                         GeneratedField::Query => {
@@ -1051,16 +1063,103 @@ impl<'de> serde::Deserialize<'de> for GetBlogPostsRequest {
                                 Some(map_.next_value::<::pbjson::private::NumberDeserialize<_>>()?.0)
                             ;
                         }
+                        GeneratedField::Sort => {
+                            if sort__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("sort"));
+                            }
+                            sort__ = Some(map_.next_value::<get_blog_posts_request::Sort>()? as i32);
+                        }
                     }
                 }
                 Ok(GetBlogPostsRequest {
                     query: query__,
                     limit: limit__.unwrap_or_default(),
                     offset: offset__.unwrap_or_default(),
+                    sort: sort__.unwrap_or_default(),
                 })
             }
         }
         deserializer.deserialize_struct("blog.GetBlogPostsRequest", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for get_blog_posts_request::Sort {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let variant = match self {
+            Self::Relevance => "RELEVANCE",
+            Self::CreatedAsc => "CREATED_ASC",
+            Self::CreatedDesc => "CREATED_DESC",
+            Self::UpdatedAsc => "UPDATED_ASC",
+            Self::UpdatedDesc => "UPDATED_DESC",
+        };
+        serializer.serialize_str(variant)
+    }
+}
+impl<'de> serde::Deserialize<'de> for get_blog_posts_request::Sort {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "RELEVANCE",
+            "CREATED_ASC",
+            "CREATED_DESC",
+            "UPDATED_ASC",
+            "UPDATED_DESC",
+        ];
+
+        struct GeneratedVisitor;
+
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = get_blog_posts_request::Sort;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(formatter, "expected one of: {:?}", &FIELDS)
+            }
+
+            fn visit_i64<E>(self, v: i64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Signed(v), &self)
+                    })
+            }
+
+            fn visit_u64<E>(self, v: u64) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                i32::try_from(v)
+                    .ok()
+                    .and_then(|x| x.try_into().ok())
+                    .ok_or_else(|| {
+                        serde::de::Error::invalid_value(serde::de::Unexpected::Unsigned(v), &self)
+                    })
+            }
+
+            fn visit_str<E>(self, value: &str) -> std::result::Result<Self::Value, E>
+            where
+                E: serde::de::Error,
+            {
+                match value {
+                    "RELEVANCE" => Ok(get_blog_posts_request::Sort::Relevance),
+                    "CREATED_ASC" => Ok(get_blog_posts_request::Sort::CreatedAsc),
+                    "CREATED_DESC" => Ok(get_blog_posts_request::Sort::CreatedDesc),
+                    "UPDATED_ASC" => Ok(get_blog_posts_request::Sort::UpdatedAsc),
+                    "UPDATED_DESC" => Ok(get_blog_posts_request::Sort::UpdatedDesc),
+                    _ => Err(serde::de::Error::unknown_variant(value, FIELDS)),
+                }
+            }
+        }
+        deserializer.deserialize_any(GeneratedVisitor)
     }
 }
 impl serde::Serialize for GetBlogPostsResponse {

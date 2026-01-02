@@ -27,6 +27,35 @@ export interface GetBlogPostsRequest {
      * @generated from protobuf field: int32 offset = 3
      */
     offset: number;
+    /**
+     * @generated from protobuf field: blog.GetBlogPostsRequest.Sort sort = 4
+     */
+    sort: GetBlogPostsRequest_Sort;
+}
+/**
+ * @generated from protobuf enum blog.GetBlogPostsRequest.Sort
+ */
+export enum GetBlogPostsRequest_Sort {
+    /**
+     * @generated from protobuf enum value: RELEVANCE = 0;
+     */
+    RELEVANCE = 0,
+    /**
+     * @generated from protobuf enum value: CREATED_ASC = 1;
+     */
+    CREATED_ASC = 1,
+    /**
+     * @generated from protobuf enum value: CREATED_DESC = 2;
+     */
+    CREATED_DESC = 2,
+    /**
+     * @generated from protobuf enum value: UPDATED_ASC = 3;
+     */
+    UPDATED_ASC = 3,
+    /**
+     * @generated from protobuf enum value: UPDATED_DESC = 4;
+     */
+    UPDATED_DESC = 4
 }
 /**
  * @generated from protobuf message blog.GetBlogPostsResponse
@@ -199,13 +228,15 @@ class GetBlogPostsRequest$Type extends MessageType<GetBlogPostsRequest> {
         super("blog.GetBlogPostsRequest", [
             { no: 1, name: "query", kind: "scalar", opt: true, T: 9 /*ScalarType.STRING*/ },
             { no: 2, name: "limit", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 3, name: "offset", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+            { no: 3, name: "offset", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 4, name: "sort", kind: "enum", T: () => ["blog.GetBlogPostsRequest.Sort", GetBlogPostsRequest_Sort] }
         ]);
     }
     create(value?: PartialMessage<GetBlogPostsRequest>): GetBlogPostsRequest {
         const message = globalThis.Object.create((this.messagePrototype!));
         message.limit = 0;
         message.offset = 0;
+        message.sort = 0;
         if (value !== undefined)
             reflectionMergePartial<GetBlogPostsRequest>(this, message, value);
         return message;
@@ -223,6 +254,9 @@ class GetBlogPostsRequest$Type extends MessageType<GetBlogPostsRequest> {
                     break;
                 case /* int32 offset */ 3:
                     message.offset = reader.int32();
+                    break;
+                case /* blog.GetBlogPostsRequest.Sort sort */ 4:
+                    message.sort = reader.int32();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -245,6 +279,9 @@ class GetBlogPostsRequest$Type extends MessageType<GetBlogPostsRequest> {
         /* int32 offset = 3; */
         if (message.offset !== 0)
             writer.tag(3, WireType.Varint).int32(message.offset);
+        /* blog.GetBlogPostsRequest.Sort sort = 4; */
+        if (message.sort !== 0)
+            writer.tag(4, WireType.Varint).int32(message.sort);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
