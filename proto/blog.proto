@@ -2,9 +2,14 @@ syntax = "proto3";
 
 package blog;
 
+// Public blog service for read operations
 service BlogService {
   rpc GetBlogPosts(GetBlogPostsRequest) returns (GetBlogPostsResponse);
   rpc GetBlogPost(GetBlogPostRequest) returns (GetBlogPostResponse);
+}
+
+// Protected blog admin service for write operations (requires authentication)
+service BlogAdminService {
   rpc CreateBlogPost(CreateBlogPostRequest) returns (CreateBlogPostResponse);
   rpc UpdateBlogPost(UpdateBlogPostRequest) returns (UpdateBlogPostResponse);
   rpc DeleteBlogPost(DeleteBlogPostRequest) returns (DeleteBlogPostResponse);

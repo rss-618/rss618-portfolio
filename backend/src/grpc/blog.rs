@@ -1,3 +1,4 @@
+use proto::blog::blog_admin_service_server::BlogAdminService as BlogAdminServiceTrait;
 use proto::blog::blog_service_server::BlogService as BlogServiceTrait;
 use proto::blog::{
     BlogPost, BlogPostSummary, CreateBlogPostRequest, CreateBlogPostResponse,
@@ -10,8 +11,7 @@ use tonic::{Request, Response, Status};
 use crate::dao::blog::BlogPostSort;
 use crate::state::AppState;
 
-/// gRPC controller for the BlogService.
-/// Uses AppState which contains Arc-wrapped services, making it cheap to clone.
+/// gRPC controller for the public BlogService (read operations).
 pub struct BlogController {
     state: AppState,
 }
@@ -76,7 +76,22 @@ impl BlogServiceTrait for BlogController {
 
         Ok(Response::new(GetBlogPostResponse { post }))
     }
+}
 
+/// gRPC controller for the protected BlogAdminService (write operations).
+/// Requires authentication via AuthMiddleware.
+pub struct BlogAdminController {
+    state: AppState,
+}
+
+impl BlogAdminController {
+    pub fn new(state: AppState) -> Self {
+        Self { state }
+    }
+}
+
+#[tonic::async_trait]
+impl BlogAdminServiceTrait for BlogAdminController {
     async fn create_blog_post(
         &self,
         request: Request<CreateBlogPostRequest>,

@@ -1,59 +1,56 @@
-use axum::{
-    extract::{Request, State},
-    http::StatusCode,
-    middleware::Next,
-    response::Response,
-};
-use axum_extra::extract::CookieJar;
+use std::future::Future;
+use std::pin::Pin;
 
-use crate::{
-    dto::auth::{AuthError, TokenRefreshResponse},
-    services::FirebaseAuth,
-    state::AppState,
-    utils::set_auth_cookies,
-};
+use axum::body::Body;
+use http::{Request, Response};
+use tonic::Status;
+use tower_http::auth::AsyncAuthorizeRequest;
 
-/// Middleware that requires a valid Firebase ID token from cookies.
-/// If the token is expired but refresh_token is valid, it will auto-refresh
-/// and set new cookies on the response.
-pub async fn require_auth(
-    State(state): State<AppState>,
-    jar: CookieJar,
-    request: Request,
-    next: Next,
-) -> Result<Response, StatusCode> {
-    let id_token = jar.get("id_token").map(|c| c.value().to_string());
-    let refresh_token = jar.get("refresh_token").map(|c| c.value().to_string());
+use crate::state::AppState;
+use crate::utils::{parse_cookie, ID_TOKEN_COOKIE};
 
-    let id_token = id_token.ok_or(StatusCode::UNAUTHORIZED)?;
+/// Async auth middleware using tower-http's AsyncAuthorizeRequest.
+#[derive(Clone)]
+pub struct GrpcAuth {
+    state: AppState,
+}
 
-    match state.firebase_auth.verify_token(&id_token).await {
-        Ok(_claims) => Ok(next.run(request).await),
-        Err(AuthError::ExpiredToken) => {
-            let refresh_token = refresh_token.ok_or(StatusCode::UNAUTHORIZED)?;
-            let refreshed = attempt_refresh(&state.firebase_auth, &refresh_token).await?;
-
-            let mut response = next.run(request).await;
-            let expires_in = refreshed.expires_in.parse().unwrap_or(3600);
-            set_auth_cookies(
-                &mut response,
-                &refreshed.id_token,
-                &refreshed.refresh_token,
-                expires_in,
-            );
-
-            Ok(response)
-        }
-        Err(_) => Err(StatusCode::UNAUTHORIZED),
+impl GrpcAuth {
+    pub fn new(state: AppState) -> Self {
+        Self { state }
     }
 }
 
-async fn attempt_refresh(
-    firebase_auth: &FirebaseAuth,
-    refresh_token: &str,
-) -> Result<TokenRefreshResponse, StatusCode> {
-    firebase_auth
-        .refresh_token(refresh_token)
-        .await
-        .map_err(|_| StatusCode::UNAUTHORIZED)
+impl<B: Send + 'static> AsyncAuthorizeRequest<B> for GrpcAuth {
+    type RequestBody = B;
+    type ResponseBody = Body;
+    type Future = Pin<Box<dyn Future<Output = Result<Request<B>, Response<Body>>> + Send>>;
+
+    fn authorize(&mut self, req: Request<B>) -> Self::Future {
+        let state = self.state.clone();
+
+        Box::pin(async move {
+            let cookie_header = req
+                .headers()
+                .get(http::header::COOKIE)
+                .and_then(|v| v.to_str().ok())
+                .unwrap_or("");
+
+            let id_token = match parse_cookie(cookie_header, ID_TOKEN_COOKIE) {
+                Some(token) => token,
+                None => {
+                    return Err(Status::unauthenticated("Missing authentication token")
+                        .into_http::<()>()
+                        .map(|_| Body::empty()));
+                }
+            };
+
+            match state.firebase_auth.verify_token(&id_token).await {
+                Ok(_claims) => Ok(req),
+                Err(_) => Err(Status::unauthenticated("Invalid or expired token")
+                    .into_http::<()>()
+                    .map(|_| Body::empty())),
+            }
+        })
+    }
 }

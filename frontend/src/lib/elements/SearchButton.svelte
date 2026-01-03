@@ -81,17 +81,19 @@
 		padding: var(--space-sm) 48px var(--space-sm) var(--space-md);
 		background-color: var(--color-surface);
 		border: 1px solid var(--color-border);
-		border-radius: var(--radius-sm);
+		border-radius: 50%;
 		color: var(--color-text);
 		font-size: 0.875rem;
 		opacity: 0;
 		pointer-events: none;
-		transition: opacity 0.3s ease;
+		transition:
+			opacity 0.3s ease,
 	}
 
 	.search-container.expanded .search-input {
 		opacity: 1;
 		pointer-events: auto;
+		border-radius: var(--radius-full);
 	}
 
 	.search-input::placeholder {

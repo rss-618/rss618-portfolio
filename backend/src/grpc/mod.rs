@@ -1,3 +1,5 @@
+mod auth;
 mod blog;
 
-pub use blog::BlogController;
+pub use auth::AuthController;
+pub use blog::{BlogAdminController, BlogController};

@@ -26,14 +26,14 @@ const FIREBASE_AUTH_URL: &str =
 /// Reference: https://firebase.google.com/docs/reference/rest/auth#section-refresh-token
 const FIREBASE_TOKEN_URL: &str = "https://securetoken.googleapis.com/v1/token";
 
-pub struct FirebaseAuth {
+pub struct FirebaseAuthService {
     project_id: String,
     api_key: String,
     keys: Arc<RwLock<Option<FirebaseKeys>>>,
     http_client: reqwest::Client,
 }
 
-impl FirebaseAuth {
+impl FirebaseAuthService {
     pub fn new(project_id: String, api_key: String) -> Self {
         Self {
             project_id,
@@ -126,7 +126,7 @@ impl FirebaseAuth {
                 .await
                 .map_err(|_| AuthError::InvalidResponse)
         } else {
-            Err(AuthError::InvalidToken)
+            Err(AuthError::InvalidRefreshToken)
         }
     }
 

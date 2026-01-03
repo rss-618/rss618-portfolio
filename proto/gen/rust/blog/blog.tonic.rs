@@ -26,34 +26,6 @@ pub mod blog_service_server {
             tonic::Response<super::GetBlogPostResponse>,
             tonic::Status,
         >;
-        async fn create_blog_post(
-            &self,
-            request: tonic::Request<super::CreateBlogPostRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::CreateBlogPostResponse>,
-            tonic::Status,
-        >;
-        async fn update_blog_post(
-            &self,
-            request: tonic::Request<super::UpdateBlogPostRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::UpdateBlogPostResponse>,
-            tonic::Status,
-        >;
-        async fn delete_blog_post(
-            &self,
-            request: tonic::Request<super::DeleteBlogPostRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::DeleteBlogPostResponse>,
-            tonic::Status,
-        >;
-        async fn restore_blog_post(
-            &self,
-            request: tonic::Request<super::RestoreBlogPostRequest>,
-        ) -> std::result::Result<
-            tonic::Response<super::RestoreBlogPostResponse>,
-            tonic::Status,
-        >;
     }
     #[derive(Debug)]
     pub struct BlogServiceServer<T> {
@@ -221,11 +193,169 @@ pub mod blog_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/blog.BlogService/CreateBlogPost" => {
+                _ => {
+                    Box::pin(async move {
+                        let mut response = http::Response::new(
+                            tonic::body::Body::default(),
+                        );
+                        let headers = response.headers_mut();
+                        headers
+                            .insert(
+                                tonic::Status::GRPC_STATUS,
+                                (tonic::Code::Unimplemented as i32).into(),
+                            );
+                        headers
+                            .insert(
+                                http::header::CONTENT_TYPE,
+                                tonic::metadata::GRPC_CONTENT_TYPE,
+                            );
+                        Ok(response)
+                    })
+                }
+            }
+        }
+    }
+    impl<T> Clone for BlogServiceServer<T> {
+        fn clone(&self) -> Self {
+            let inner = self.inner.clone();
+            Self {
+                inner,
+                accept_compression_encodings: self.accept_compression_encodings,
+                send_compression_encodings: self.send_compression_encodings,
+                max_decoding_message_size: self.max_decoding_message_size,
+                max_encoding_message_size: self.max_encoding_message_size,
+            }
+        }
+    }
+    /// Generated gRPC service name
+    pub const SERVICE_NAME: &str = "blog.BlogService";
+    impl<T> tonic::server::NamedService for BlogServiceServer<T> {
+        const NAME: &'static str = SERVICE_NAME;
+    }
+}
+/// Generated server implementations.
+pub mod blog_admin_service_server {
+    #![allow(
+        unused_variables,
+        dead_code,
+        missing_docs,
+        clippy::wildcard_imports,
+        clippy::let_unit_value,
+    )]
+    use tonic::codegen::*;
+    /// Generated trait containing gRPC methods that should be implemented for use with BlogAdminServiceServer.
+    #[async_trait]
+    pub trait BlogAdminService: std::marker::Send + std::marker::Sync + 'static {
+        async fn create_blog_post(
+            &self,
+            request: tonic::Request<super::CreateBlogPostRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::CreateBlogPostResponse>,
+            tonic::Status,
+        >;
+        async fn update_blog_post(
+            &self,
+            request: tonic::Request<super::UpdateBlogPostRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::UpdateBlogPostResponse>,
+            tonic::Status,
+        >;
+        async fn delete_blog_post(
+            &self,
+            request: tonic::Request<super::DeleteBlogPostRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::DeleteBlogPostResponse>,
+            tonic::Status,
+        >;
+        async fn restore_blog_post(
+            &self,
+            request: tonic::Request<super::RestoreBlogPostRequest>,
+        ) -> std::result::Result<
+            tonic::Response<super::RestoreBlogPostResponse>,
+            tonic::Status,
+        >;
+    }
+    #[derive(Debug)]
+    pub struct BlogAdminServiceServer<T> {
+        inner: Arc<T>,
+        accept_compression_encodings: EnabledCompressionEncodings,
+        send_compression_encodings: EnabledCompressionEncodings,
+        max_decoding_message_size: Option<usize>,
+        max_encoding_message_size: Option<usize>,
+    }
+    impl<T> BlogAdminServiceServer<T> {
+        pub fn new(inner: T) -> Self {
+            Self::from_arc(Arc::new(inner))
+        }
+        pub fn from_arc(inner: Arc<T>) -> Self {
+            Self {
+                inner,
+                accept_compression_encodings: Default::default(),
+                send_compression_encodings: Default::default(),
+                max_decoding_message_size: None,
+                max_encoding_message_size: None,
+            }
+        }
+        pub fn with_interceptor<F>(
+            inner: T,
+            interceptor: F,
+        ) -> InterceptedService<Self, F>
+        where
+            F: tonic::service::Interceptor,
+        {
+            InterceptedService::new(Self::new(inner), interceptor)
+        }
+        /// Enable decompressing requests with the given encoding.
+        #[must_use]
+        pub fn accept_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.accept_compression_encodings.enable(encoding);
+            self
+        }
+        /// Compress responses with the given encoding, if the client supports it.
+        #[must_use]
+        pub fn send_compressed(mut self, encoding: CompressionEncoding) -> Self {
+            self.send_compression_encodings.enable(encoding);
+            self
+        }
+        /// Limits the maximum size of a decoded message.
+        ///
+        /// Default: `4MB`
+        #[must_use]
+        pub fn max_decoding_message_size(mut self, limit: usize) -> Self {
+            self.max_decoding_message_size = Some(limit);
+            self
+        }
+        /// Limits the maximum size of an encoded message.
+        ///
+        /// Default: `usize::MAX`
+        #[must_use]
+        pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
+            self.max_encoding_message_size = Some(limit);
+            self
+        }
+    }
+    impl<T, B> tonic::codegen::Service<http::Request<B>> for BlogAdminServiceServer<T>
+    where
+        T: BlogAdminService,
+        B: Body + std::marker::Send + 'static,
+        B::Error: Into<StdError> + std::marker::Send + 'static,
+    {
+        type Response = http::Response<tonic::body::Body>;
+        type Error = std::convert::Infallible;
+        type Future = BoxFuture<Self::Response, Self::Error>;
+        fn poll_ready(
+            &mut self,
+            _cx: &mut Context<'_>,
+        ) -> Poll<std::result::Result<(), Self::Error>> {
+            Poll::Ready(Ok(()))
+        }
+        fn call(&mut self, req: http::Request<B>) -> Self::Future {
+            match req.uri().path() {
+                "/blog.BlogAdminService/CreateBlogPost" => {
                     #[allow(non_camel_case_types)]
-                    struct CreateBlogPostSvc<T: BlogService>(pub Arc<T>);
+                    struct CreateBlogPostSvc<T: BlogAdminService>(pub Arc<T>);
                     impl<
-                        T: BlogService,
+                        T: BlogAdminService,
                     > tonic::server::UnaryService<super::CreateBlogPostRequest>
                     for CreateBlogPostSvc<T> {
                         type Response = super::CreateBlogPostResponse;
@@ -239,7 +369,8 @@ pub mod blog_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as BlogService>::create_blog_post(&inner, request).await
+                                <T as BlogAdminService>::create_blog_post(&inner, request)
+                                    .await
                             };
                             Box::pin(fut)
                         }
@@ -266,11 +397,11 @@ pub mod blog_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/blog.BlogService/UpdateBlogPost" => {
+                "/blog.BlogAdminService/UpdateBlogPost" => {
                     #[allow(non_camel_case_types)]
-                    struct UpdateBlogPostSvc<T: BlogService>(pub Arc<T>);
+                    struct UpdateBlogPostSvc<T: BlogAdminService>(pub Arc<T>);
                     impl<
-                        T: BlogService,
+                        T: BlogAdminService,
                     > tonic::server::UnaryService<super::UpdateBlogPostRequest>
                     for UpdateBlogPostSvc<T> {
                         type Response = super::UpdateBlogPostResponse;
@@ -284,7 +415,8 @@ pub mod blog_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as BlogService>::update_blog_post(&inner, request).await
+                                <T as BlogAdminService>::update_blog_post(&inner, request)
+                                    .await
                             };
                             Box::pin(fut)
                         }
@@ -311,11 +443,11 @@ pub mod blog_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/blog.BlogService/DeleteBlogPost" => {
+                "/blog.BlogAdminService/DeleteBlogPost" => {
                     #[allow(non_camel_case_types)]
-                    struct DeleteBlogPostSvc<T: BlogService>(pub Arc<T>);
+                    struct DeleteBlogPostSvc<T: BlogAdminService>(pub Arc<T>);
                     impl<
-                        T: BlogService,
+                        T: BlogAdminService,
                     > tonic::server::UnaryService<super::DeleteBlogPostRequest>
                     for DeleteBlogPostSvc<T> {
                         type Response = super::DeleteBlogPostResponse;
@@ -329,7 +461,8 @@ pub mod blog_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as BlogService>::delete_blog_post(&inner, request).await
+                                <T as BlogAdminService>::delete_blog_post(&inner, request)
+                                    .await
                             };
                             Box::pin(fut)
                         }
@@ -356,11 +489,11 @@ pub mod blog_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/blog.BlogService/RestoreBlogPost" => {
+                "/blog.BlogAdminService/RestoreBlogPost" => {
                     #[allow(non_camel_case_types)]
-                    struct RestoreBlogPostSvc<T: BlogService>(pub Arc<T>);
+                    struct RestoreBlogPostSvc<T: BlogAdminService>(pub Arc<T>);
                     impl<
-                        T: BlogService,
+                        T: BlogAdminService,
                     > tonic::server::UnaryService<super::RestoreBlogPostRequest>
                     for RestoreBlogPostSvc<T> {
                         type Response = super::RestoreBlogPostResponse;
@@ -374,7 +507,8 @@ pub mod blog_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as BlogService>::restore_blog_post(&inner, request).await
+                                <T as BlogAdminService>::restore_blog_post(&inner, request)
+                                    .await
                             };
                             Box::pin(fut)
                         }
@@ -423,7 +557,7 @@ pub mod blog_service_server {
             }
         }
     }
-    impl<T> Clone for BlogServiceServer<T> {
+    impl<T> Clone for BlogAdminServiceServer<T> {
         fn clone(&self) -> Self {
             let inner = self.inner.clone();
             Self {
@@ -436,8 +570,8 @@ pub mod blog_service_server {
         }
     }
     /// Generated gRPC service name
-    pub const SERVICE_NAME: &str = "blog.BlogService";
-    impl<T> tonic::server::NamedService for BlogServiceServer<T> {
+    pub const SERVICE_NAME: &str = "blog.BlogAdminService";
+    impl<T> tonic::server::NamedService for BlogAdminServiceServer<T> {
         const NAME: &'static str = SERVICE_NAME;
     }
 }

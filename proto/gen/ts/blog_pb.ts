@@ -10,7 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file blog.proto.
  */
 export const file_blog: GenFile = /*@__PURE__*/
-  fileDesc("CgpibG9nLnByb3RvEgRibG9nIt0BChNHZXRCbG9nUG9zdHNSZXF1ZXN0EhIKBXF1ZXJ5GAEgASgJSACIAQESDQoFbGltaXQYAiABKAUSDgoGb2Zmc2V0GAMgASgFEiwKBHNvcnQYBCABKA4yHi5ibG9nLkdldEJsb2dQb3N0c1JlcXVlc3QuU29ydCJbCgRTb3J0Eg0KCVJFTEVWQU5DRRAAEg8KC0NSRUFURURfQVNDEAESEAoMQ1JFQVRFRF9ERVNDEAISDwoLVVBEQVRFRF9BU0MQAxIQCgxVUERBVEVEX0RFU0MQBEIICgZfcXVlcnkiSwoUR2V0QmxvZ1Bvc3RzUmVzcG9uc2USJAoFcG9zdHMYASADKAsyFS5ibG9nLkJsb2dQb3N0U3VtbWFyeRINCgV0b3RhbBgCIAEoBSJpCg9CbG9nUG9zdFN1bW1hcnkSCgoCaWQYASABKAMSDQoFdGl0bGUYAiABKAkSEwoLZGVzY3JpcHRpb24YAyABKAkSEgoKY3JlYXRlZF9hdBgEIAEoAxISCgp1cGRhdGVkX2F0GAUgASgDIiAKEkdldEJsb2dQb3N0UmVxdWVzdBIKCgJpZBgBIAEoAyIzChNHZXRCbG9nUG9zdFJlc3BvbnNlEhwKBHBvc3QYASABKAsyDi5ibG9nLkJsb2dQb3N0InAKCEJsb2dQb3N0EgoKAmlkGAEgASgDEg0KBXRpdGxlGAIgASgJEhMKC2Rlc2NyaXB0aW9uGAMgASgJEgwKBGJvZHkYBCABKAkSEgoKY3JlYXRlZF9hdBgFIAEoAxISCgp1cGRhdGVkX2F0GAYgASgDIkkKFUNyZWF0ZUJsb2dQb3N0UmVxdWVzdBINCgV0aXRsZRgBIAEoCRITCgtkZXNjcmlwdGlvbhgCIAEoCRIMCgRib2R5GAMgASgJIiQKFkNyZWF0ZUJsb2dQb3N0UmVzcG9uc2USCgoCaWQYASABKAMihwEKFVVwZGF0ZUJsb2dQb3N0UmVxdWVzdBIKCgJpZBgBIAEoAxISCgV0aXRsZRgCIAEoCUgAiAEBEhgKC2Rlc2NyaXB0aW9uGAMgASgJSAGIAQESEQoEYm9keRgEIAEoCUgCiAEBQggKBl90aXRsZUIOCgxfZGVzY3JpcHRpb25CBwoFX2JvZHkiGAoWVXBkYXRlQmxvZ1Bvc3RSZXNwb25zZSIjChVEZWxldGVCbG9nUG9zdFJlcXVlc3QSCgoCaWQYASABKAMiGAoWRGVsZXRlQmxvZ1Bvc3RSZXNwb25zZSIkChZSZXN0b3JlQmxvZ1Bvc3RSZXF1ZXN0EgoKAmlkGAEgASgDIhkKF1Jlc3RvcmVCbG9nUG9zdFJlc3BvbnNlMs8DCgtCbG9nU2VydmljZRJFCgxHZXRCbG9nUG9zdHMSGS5ibG9nLkdldEJsb2dQb3N0c1JlcXVlc3QaGi5ibG9nLkdldEJsb2dQb3N0c1Jlc3BvbnNlEkIKC0dldEJsb2dQb3N0EhguYmxvZy5HZXRCbG9nUG9zdFJlcXVlc3QaGS5ibG9nLkdldEJsb2dQb3N0UmVzcG9uc2USSwoOQ3JlYXRlQmxvZ1Bvc3QSGy5ibG9nLkNyZWF0ZUJsb2dQb3N0UmVxdWVzdBocLmJsb2cuQ3JlYXRlQmxvZ1Bvc3RSZXNwb25zZRJLCg5VcGRhdGVCbG9nUG9zdBIbLmJsb2cuVXBkYXRlQmxvZ1Bvc3RSZXF1ZXN0GhwuYmxvZy5VcGRhdGVCbG9nUG9zdFJlc3BvbnNlEksKDkRlbGV0ZUJsb2dQb3N0EhsuYmxvZy5EZWxldGVCbG9nUG9zdFJlcXVlc3QaHC5ibG9nLkRlbGV0ZUJsb2dQb3N0UmVzcG9uc2USTgoPUmVzdG9yZUJsb2dQb3N0EhwuYmxvZy5SZXN0b3JlQmxvZ1Bvc3RSZXF1ZXN0Gh0uYmxvZy5SZXN0b3JlQmxvZ1Bvc3RSZXNwb25zZWIGcHJvdG8z");
+  fileDesc("CgpibG9nLnByb3RvEgRibG9nIt0BChNHZXRCbG9nUG9zdHNSZXF1ZXN0EhIKBXF1ZXJ5GAEgASgJSACIAQESDQoFbGltaXQYAiABKAUSDgoGb2Zmc2V0GAMgASgFEiwKBHNvcnQYBCABKA4yHi5ibG9nLkdldEJsb2dQb3N0c1JlcXVlc3QuU29ydCJbCgRTb3J0Eg0KCVJFTEVWQU5DRRAAEg8KC0NSRUFURURfQVNDEAESEAoMQ1JFQVRFRF9ERVNDEAISDwoLVVBEQVRFRF9BU0MQAxIQCgxVUERBVEVEX0RFU0MQBEIICgZfcXVlcnkiSwoUR2V0QmxvZ1Bvc3RzUmVzcG9uc2USJAoFcG9zdHMYASADKAsyFS5ibG9nLkJsb2dQb3N0U3VtbWFyeRINCgV0b3RhbBgCIAEoBSJpCg9CbG9nUG9zdFN1bW1hcnkSCgoCaWQYASABKAMSDQoFdGl0bGUYAiABKAkSEwoLZGVzY3JpcHRpb24YAyABKAkSEgoKY3JlYXRlZF9hdBgEIAEoAxISCgp1cGRhdGVkX2F0GAUgASgDIiAKEkdldEJsb2dQb3N0UmVxdWVzdBIKCgJpZBgBIAEoAyIzChNHZXRCbG9nUG9zdFJlc3BvbnNlEhwKBHBvc3QYASABKAsyDi5ibG9nLkJsb2dQb3N0InAKCEJsb2dQb3N0EgoKAmlkGAEgASgDEg0KBXRpdGxlGAIgASgJEhMKC2Rlc2NyaXB0aW9uGAMgASgJEgwKBGJvZHkYBCABKAkSEgoKY3JlYXRlZF9hdBgFIAEoAxISCgp1cGRhdGVkX2F0GAYgASgDIkkKFUNyZWF0ZUJsb2dQb3N0UmVxdWVzdBINCgV0aXRsZRgBIAEoCRITCgtkZXNjcmlwdGlvbhgCIAEoCRIMCgRib2R5GAMgASgJIiQKFkNyZWF0ZUJsb2dQb3N0UmVzcG9uc2USCgoCaWQYASABKAMihwEKFVVwZGF0ZUJsb2dQb3N0UmVxdWVzdBIKCgJpZBgBIAEoAxISCgV0aXRsZRgCIAEoCUgAiAEBEhgKC2Rlc2NyaXB0aW9uGAMgASgJSAGIAQESEQoEYm9keRgEIAEoCUgCiAEBQggKBl90aXRsZUIOCgxfZGVzY3JpcHRpb25CBwoFX2JvZHkiGAoWVXBkYXRlQmxvZ1Bvc3RSZXNwb25zZSIjChVEZWxldGVCbG9nUG9zdFJlcXVlc3QSCgoCaWQYASABKAMiGAoWRGVsZXRlQmxvZ1Bvc3RSZXNwb25zZSIkChZSZXN0b3JlQmxvZ1Bvc3RSZXF1ZXN0EgoKAmlkGAEgASgDIhkKF1Jlc3RvcmVCbG9nUG9zdFJlc3BvbnNlMpgBCgtCbG9nU2VydmljZRJFCgxHZXRCbG9nUG9zdHMSGS5ibG9nLkdldEJsb2dQb3N0c1JlcXVlc3QaGi5ibG9nLkdldEJsb2dQb3N0c1Jlc3BvbnNlEkIKC0dldEJsb2dQb3N0EhguYmxvZy5HZXRCbG9nUG9zdFJlcXVlc3QaGS5ibG9nLkdldEJsb2dQb3N0UmVzcG9uc2UyyQIKEEJsb2dBZG1pblNlcnZpY2USSwoOQ3JlYXRlQmxvZ1Bvc3QSGy5ibG9nLkNyZWF0ZUJsb2dQb3N0UmVxdWVzdBocLmJsb2cuQ3JlYXRlQmxvZ1Bvc3RSZXNwb25zZRJLCg5VcGRhdGVCbG9nUG9zdBIbLmJsb2cuVXBkYXRlQmxvZ1Bvc3RSZXF1ZXN0GhwuYmxvZy5VcGRhdGVCbG9nUG9zdFJlc3BvbnNlEksKDkRlbGV0ZUJsb2dQb3N0EhsuYmxvZy5EZWxldGVCbG9nUG9zdFJlcXVlc3QaHC5ibG9nLkRlbGV0ZUJsb2dQb3N0UmVzcG9uc2USTgoPUmVzdG9yZUJsb2dQb3N0EhwuYmxvZy5SZXN0b3JlQmxvZ1Bvc3RSZXF1ZXN0Gh0uYmxvZy5SZXN0b3JlQmxvZ1Bvc3RSZXNwb25zZWIGcHJvdG8z");
 
 /**
  * @generated from message blog.GetBlogPostsRequest
@@ -365,6 +365,8 @@ export const RestoreBlogPostResponseSchema: GenMessage<RestoreBlogPostResponse> 
   messageDesc(file_blog, 13);
 
 /**
+ * Public blog service for read operations
+ *
  * @generated from service blog.BlogService
  */
 export const BlogService: GenService<{
@@ -384,8 +386,17 @@ export const BlogService: GenService<{
     input: typeof GetBlogPostRequestSchema;
     output: typeof GetBlogPostResponseSchema;
   },
+}> = /*@__PURE__*/
+  serviceDesc(file_blog, 0);
+
+/**
+ * Protected blog admin service for write operations (requires authentication)
+ *
+ * @generated from service blog.BlogAdminService
+ */
+export const BlogAdminService: GenService<{
   /**
-   * @generated from rpc blog.BlogService.CreateBlogPost
+   * @generated from rpc blog.BlogAdminService.CreateBlogPost
    */
   createBlogPost: {
     methodKind: "unary";
@@ -393,7 +404,7 @@ export const BlogService: GenService<{
     output: typeof CreateBlogPostResponseSchema;
   },
   /**
-   * @generated from rpc blog.BlogService.UpdateBlogPost
+   * @generated from rpc blog.BlogAdminService.UpdateBlogPost
    */
   updateBlogPost: {
     methodKind: "unary";
@@ -401,7 +412,7 @@ export const BlogService: GenService<{
     output: typeof UpdateBlogPostResponseSchema;
   },
   /**
-   * @generated from rpc blog.BlogService.DeleteBlogPost
+   * @generated from rpc blog.BlogAdminService.DeleteBlogPost
    */
   deleteBlogPost: {
     methodKind: "unary";
@@ -409,7 +420,7 @@ export const BlogService: GenService<{
     output: typeof DeleteBlogPostResponseSchema;
   },
   /**
-   * @generated from rpc blog.BlogService.RestoreBlogPost
+   * @generated from rpc blog.BlogAdminService.RestoreBlogPost
    */
   restoreBlogPost: {
     methodKind: "unary";
@@ -417,5 +428,5 @@ export const BlogService: GenService<{
     output: typeof RestoreBlogPostResponseSchema;
   },
 }> = /*@__PURE__*/
-  serviceDesc(file_blog, 0);
+  serviceDesc(file_blog, 1);
 
