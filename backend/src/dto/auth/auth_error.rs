@@ -4,7 +4,6 @@ pub enum AuthError {
     ExpiredToken,
     InvalidCredentials,
     InvalidRefreshToken,
-    TokenExpired,
     UserDisabled,
     TooManyAttempts,
     NetworkError,

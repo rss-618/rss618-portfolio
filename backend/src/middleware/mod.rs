@@ -1,3 +1,3 @@
 pub mod auth;
 
-pub use auth::GrpcAuth;
+pub use auth::auth_interceptor;

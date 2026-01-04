@@ -8,12 +8,7 @@
 			"runtimeExecutable": "npm",
 			"runtimeArgs": ["run", "dev"],
 			"cwd": "${workspaceFolder}/frontend",
-			"console": "integratedTerminal",
-			"serverReadyAction": {
-				"pattern": "Local:\\s+(https?://\\S+)",
-				"uriFormat": "%s",
-				"action": "debugWithChrome"
-			}
+			"console": "integratedTerminal"
 		},
 		{
 			"name": "Frontend: Debug in Chrome",
@@ -52,12 +47,7 @@
 			"runtimeArgs": ["run", "dev"],
 			"cwd": "${workspaceFolder}/frontend",
 			"console": "integratedTerminal",
-			"preLaunchTask": "Backend: Run",
-			"serverReadyAction": {
-				"pattern": "Local:\\s+(https?://\\S+)",
-				"uriFormat": "%s",
-				"action": "debugWithChrome"
-			}
+			"preLaunchTask": "Backend: Run"
 		}
 	],
 	"compounds": [

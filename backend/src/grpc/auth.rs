@@ -89,7 +89,7 @@ impl AuthServiceTrait for AuthController {
             .await
             .map_err(|e| match e {
                 AuthError::InvalidRefreshToken => Status::unauthenticated("Invalid refresh token"),
-                AuthError::TokenExpired => Status::unauthenticated("Refresh token expired"),
+                AuthError::ExpiredToken => Status::unauthenticated("Refresh token expired"),
                 _ => Status::internal("Token refresh failed"),
             })?;
 

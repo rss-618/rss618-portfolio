@@ -77,31 +77,3 @@ pub fn clear_grpc_auth_cookies<T>(response: &mut tonic::Response<T>) {
         .metadata_mut()
         .append("set-cookie", refresh_cookie.parse().unwrap());
 }
-
-/// Set auth cookies on an HTTP response
-pub fn set_http_auth_cookies<B>(
-    response: &mut http::Response<B>,
-    id_token: &str,
-    refresh_token: &str,
-    id_token_expires_in: u64,
-) {
-    let (id_cookie, refresh_cookie) =
-        build_auth_cookies(id_token, refresh_token, id_token_expires_in);
-    let headers = response.headers_mut();
-    headers.insert(
-        http::header::SET_COOKIE,
-        id_cookie.parse().unwrap(),
-    );
-    headers.append(
-        http::header::SET_COOKIE,
-        refresh_cookie.parse().unwrap(),
-    );
-}
-
-/// Clear auth cookies on an HTTP response
-pub fn clear_http_auth_cookies<B>(response: &mut http::Response<B>) {
-    let (id_cookie, refresh_cookie) = build_clear_auth_cookies();
-    let headers = response.headers_mut();
-    headers.insert(http::header::SET_COOKIE, id_cookie.parse().unwrap());
-    headers.append(http::header::SET_COOKIE, refresh_cookie.parse().unwrap());
-}

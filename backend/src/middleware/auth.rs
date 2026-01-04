@@ -1,56 +1,32 @@
-use std::future::Future;
-use std::pin::Pin;
-
-use axum::body::Body;
-use http::{Request, Response};
-use tonic::Status;
-use tower_http::auth::AsyncAuthorizeRequest;
+use tonic::{Request, Status};
 
 use crate::state::AppState;
 use crate::utils::{parse_cookie, ID_TOKEN_COOKIE};
 
-/// Async auth middleware using tower-http's AsyncAuthorizeRequest.
-#[derive(Clone)]
-pub struct GrpcAuth {
+/// Sync auth interceptor for protected gRPC services.
+///
+/// Uses cached Firebase public keys for JWT verification. If keys are missing
+/// or the key ID isn't found (due to key rotation), verification fails and the
+/// frontend's refresh flow will fetch fresh keys. Not the most precise or
+/// performant approach, but keeps things simple for a single-user admin panel.
+pub fn auth_interceptor(
     state: AppState,
-}
+) -> impl Fn(Request<()>) -> Result<Request<()>, Status> + Clone {
+    move |req: Request<()>| {
+        let cookie_header = req
+            .metadata()
+            .get("cookie")
+            .and_then(|v| v.to_str().ok())
+            .unwrap_or("");
 
-impl GrpcAuth {
-    pub fn new(state: AppState) -> Self {
-        Self { state }
-    }
-}
+        let id_token = parse_cookie(cookie_header, ID_TOKEN_COOKIE)
+            .ok_or_else(|| Status::unauthenticated("Missing authentication token"))?;
 
-impl<B: Send + 'static> AsyncAuthorizeRequest<B> for GrpcAuth {
-    type RequestBody = B;
-    type ResponseBody = Body;
-    type Future = Pin<Box<dyn Future<Output = Result<Request<B>, Response<Body>>> + Send>>;
+        state
+            .firebase_auth
+            .verify_token_sync(&id_token)
+            .map_err(|_| Status::unauthenticated("Invalid or expired token"))?;
 
-    fn authorize(&mut self, req: Request<B>) -> Self::Future {
-        let state = self.state.clone();
-
-        Box::pin(async move {
-            let cookie_header = req
-                .headers()
-                .get(http::header::COOKIE)
-                .and_then(|v| v.to_str().ok())
-                .unwrap_or("");
-
-            let id_token = match parse_cookie(cookie_header, ID_TOKEN_COOKIE) {
-                Some(token) => token,
-                None => {
-                    return Err(Status::unauthenticated("Missing authentication token")
-                        .into_http::<()>()
-                        .map(|_| Body::empty()));
-                }
-            };
-
-            match state.firebase_auth.verify_token(&id_token).await {
-                Ok(_claims) => Ok(req),
-                Err(_) => Err(Status::unauthenticated("Invalid or expired token")
-                    .into_http::<()>()
-                    .map(|_| Body::empty())),
-            }
-        })
+        Ok(req)
     }
 }

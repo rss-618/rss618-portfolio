@@ -82,11 +82,27 @@ impl FirebaseAuthService {
         }
     }
 
-    pub async fn verify_token(&self, token: &str) -> Result<FirebaseClaims, AuthError> {
+    /// Synchronous token verification using cached keys.
+    /// Returns error if keys aren't cached (triggers token refresh flow).
+    pub fn verify_token_sync(&self, token: &str) -> Result<FirebaseClaims, AuthError> {
+        let keys = self
+            .keys
+            .try_read()
+            .ok()
+            .and_then(|guard| guard.clone())
+            .ok_or(AuthError::InvalidToken)?;
+
+        self.verify_token_with_keys(token, &keys)
+    }
+
+    fn verify_token_with_keys(
+        &self,
+        token: &str,
+        keys: &FirebaseKeys,
+    ) -> Result<FirebaseClaims, AuthError> {
         let header = decode_header(token).map_err(|_| AuthError::InvalidToken)?;
         let kid = header.kid.ok_or(AuthError::InvalidToken)?;
 
-        let keys = self.get_keys().await?;
         let key = keys.keys.get(&kid).ok_or(AuthError::InvalidToken)?;
 
         let mut validation = Validation::new(jsonwebtoken::Algorithm::RS256);
@@ -130,11 +146,12 @@ impl FirebaseAuthService {
         }
     }
 
-    async fn get_keys(&self) -> Result<FirebaseKeys, AuthError> {
-        if let Some(keys) = self.keys.read().await.clone() {
-            return Ok(keys);
-        }
+    /// Pre-fetch and cache Firebase public keys. Call at startup.
+    pub async fn prefetch_keys(&self) -> Result<(), AuthError> {
+        self.get_keys().await.map(|_| ())
+    }
 
+    async fn get_keys(&self) -> Result<FirebaseKeys, AuthError> {
         let keys = self.fetch_keys().await?;
         *self.keys.write().await = Some(keys.clone());
         Ok(keys)

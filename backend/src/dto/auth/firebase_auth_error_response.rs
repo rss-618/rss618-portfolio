@@ -8,6 +8,7 @@ pub struct FirebaseAuthErrorResponse {
 
 #[derive(Deserialize)]
 pub struct FirebaseAuthErrorDetail {
+    #[allow(dead_code)]
     pub code: u32,
     pub message: String,
 }

@@ -8,5 +8,6 @@ pub struct BlogPost {
     pub body: String,
     pub created_at: i64,
     pub updated_at: i64,
+    #[allow(dead_code)] // Soft delete support
     pub deleted_at: Option<i64>,
 }

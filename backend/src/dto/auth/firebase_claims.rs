@@ -3,6 +3,7 @@ use serde::Deserialize;
 /// Claims from a Firebase ID token
 /// Reference: https://firebase.google.com/docs/auth/admin/verify-id-tokens
 #[derive(Debug, Clone, Deserialize)]
+#[allow(dead_code)]
 pub struct FirebaseClaims {
     pub email: Option<String>,
     pub sub: String,
